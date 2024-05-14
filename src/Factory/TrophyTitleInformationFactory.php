@@ -15,7 +15,7 @@ use Tustin\PlayStation\Iterator\TrophyTitlesIterator;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleNameFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;
 
-class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInterface
+class TrophyTitleInformationFactory extends Api implements IteratorAggregate, FactoryInterface
 {
     /**
      * Platforms for filtering.
@@ -34,6 +34,12 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      */
     private ?bool $hasTrophyGroups = null;
 
+    /**
+     * The title you are getting trophies for.
+     *
+     */
+    private ?string $title = null;
+
     public function __construct(private ?User $user)
     {
         parent::__construct($user->getHttpClient());
@@ -47,7 +53,7 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      * @param boolean $value
      * @return TrophyTitlesFactory
      */
-    public function hasTrophyGroups(bool $value = true): TrophyTitlesFactory
+    public function hasTrophyGroups(bool $value = true): TrophyTitleInformationFactory
     {
         $this->hasTrophyGroups = $value;
 
@@ -60,7 +66,7 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      * @param string $name
      * @return TrophyTitlesFactory
      */
-    public function withName(string $name): TrophyTitlesFactory
+    public function withName(string $name): TrophyTitleInformationFactory
     {
         $this->withName = $name;
 
@@ -73,11 +79,23 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      * @param User $user
      * @return TrophyTitlesFactory
      */
-    public function forUser(User $user): TrophyTitlesFactory
+    public function forUser(User $user): TrophyTitleInformationFactory
     {
         $this->user = $user;
 
         return $this;
+    }
+
+    public function forTitle(string $title): TrophyTitleInformationFactory
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 
     /**
